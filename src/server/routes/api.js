@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { ObjectId } from 'mongodb'
 
 const api = db => {
   const router = Router();
@@ -9,12 +10,24 @@ const api = db => {
   // effectively prevents the db and client from ever getting out of sync
   router.put("/board", (req, res) => {
     const board = req.body;
+    const id = board._id
+
+    delete board._id
     boards
-      .replaceOne({ _id: board._id, users: req.user._id }, board, {
-        upsert: true
-      })
+      .replaceOne(
+        { 
+          _id: new ObjectId(id), 
+          //users: req.user._id 
+        },
+        board, 
+        {
+          upsert: true
+        }
+      )
       .then(result => {
         res.send(result);
+      }).catch((e) => {
+        console.error(e)
       });
   });
 

@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
-import shortid from "shortid";
+
+import { ObjectID } from 'bson'
 import ClickOutside from "../ClickOutside/ClickOutside";
 import "./CardAdder.scss";
 
@@ -42,7 +43,7 @@ class CardAdder extends Component {
     const { listId, dispatch } = this.props;
     if (newText === "") return;
 
-    const cardId = shortid.generate();
+    const cardId = (new ObjectID()).toString()
     dispatch({
       type: "ADD_CARD",
       payload: { cardText: newText, cardId, listId }

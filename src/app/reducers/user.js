@@ -7,3 +7,4 @@ const user = (state = null, action) => {
 };
 
 export default user;
+

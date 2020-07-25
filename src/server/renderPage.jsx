@@ -3,7 +3,7 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import { StaticRouter } from "react-router";
+import { StaticRouter, Redirect } from "react-router";
 import { HeadCollector } from "react-head";
 import { resetContext } from "react-beautiful-dnd";
 import App from "../app/components/App";
@@ -21,10 +21,14 @@ const renderPage = (req, res) => {
   // Put initialState (which contains board state) into a redux store that will be passed to the client
   // through the window object in the generated html string
   const store = createStore(rootReducer, req.initialState);
-
+  const preloadedState = store.getState();
   const context = {};
   const headTags = [];
   resetContext();
+console.log('preloadedState >>>', preloadedState)
+  if (!preloadedState.user) {
+    return res.redirect('/login')
+  }
 
   // This is where the magic happens
   const appString = renderToString(
@@ -36,8 +40,6 @@ const renderPage = (req, res) => {
       </Provider>
     </HeadCollector>
   );
-
-  const preloadedState = store.getState();
 
   const html = `
     <!DOCTYPE html>
@@ -62,6 +64,7 @@ const renderPage = (req, res) => {
       </body>
       <script>
         window.PRELOADED_STATE = ${JSON.stringify(preloadedState)}
+        console.log('window.PRELOADED_STATE', window.PRELOADED_STATE)
       </script>
       <script src=${manifest["main.js"]}></script>
     </html>

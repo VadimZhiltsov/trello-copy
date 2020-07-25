@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
-import shortid from "shortid";
+import { ObjectID } from 'bson'
 import "./ListAdder.scss";
 
 class ListAdder extends Component {
@@ -35,7 +35,7 @@ class ListAdder extends Component {
   handleSubmit = () => {
     const { dispatch, boardId } = this.props;
     const { listTitle } = this.state;
-    const listId = shortid.generate();
+    const listId = (new ObjectID()).toString();
     if (listTitle === "") return;
     dispatch({
       type: "ADD_LIST",

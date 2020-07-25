@@ -14,6 +14,8 @@ import configurePassport from "./passport";
 import api from "./routes/api";
 import auth from "./routes/auth";
 import fetchBoardData from "./fetchBoardData";
+import expressLayouts from 'express-ejs-layouts';
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -40,6 +42,15 @@ MongoClient.connect(process.env.MONGODB_URL).then(client => {
     serveStatic("dist/public", { enableBrotli: true, maxAge: "1y" })
   );
 
+  //TODO: replace absolute path, fine for demo
+  app.set('views', '/Users/vzhyltsov/projects/react-kanban/src/server/views');
+  app.set('view engine', 'ejs');
+  app.use(expressLayouts)
+
+  app.use(function(err, req, res, next) {
+    console.log(err);
+  });
+
   // Persist session in mongoDB
   app.use(
     session({
@@ -51,7 +62,7 @@ MongoClient.connect(process.env.MONGODB_URL).then(client => {
   );
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use("/auth", auth);
+  app.use("/", auth(db));
   app.use("/api", api(db));
   app.use(fetchBoardData(db));
   app.get("*", renderPage);

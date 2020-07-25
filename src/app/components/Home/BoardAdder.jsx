@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import slugify from "slugify";
-import shortid from "shortid";
+import { ObjectID } from 'bson'
 import ClickOutside from "../ClickOutside/ClickOutside";
 
 class BoardAdder extends Component {
@@ -32,7 +32,7 @@ class BoardAdder extends Component {
       return;
     }
     const { dispatch, history, userId } = this.props;
-    const boardId = shortid.generate();
+    const boardId = (new ObjectID()).toString()
     dispatch({
       type: "ADD_BOARD",
       payload: {

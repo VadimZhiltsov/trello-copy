@@ -12,6 +12,7 @@ module.exports = {
   target: "web",
   entry: "./src/client.jsx",
   output: {
+    globalObject: "this",
     path: path.join(__dirname, "dist/public"),
     publicPath: "/static/",
     filename: "bundle.[hash:6].js"

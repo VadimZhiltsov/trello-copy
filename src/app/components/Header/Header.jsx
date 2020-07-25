@@ -30,7 +30,7 @@ class Header extends Component {
             <FaUserSecret className="guest-icon" />
           )}
           {user ? (
-            <a className="signout-link" href="/auth/signout">
+            <a className="signout-link" href="/signout">
               <FaSignOut className="signout-icon" />
               &nbsp;Sign out
             </a>

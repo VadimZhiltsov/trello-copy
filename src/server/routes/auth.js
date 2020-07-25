@@ -1,30 +1,55 @@
 import { Router } from "express";
 import passport from "passport";
 
-const router = Router();
+export default (db) => {
+  const router = Router();
+  const users = db.collection("users");
 
-router.get("/twitter", passport.authenticate("twitter"));
-router.get(
-  "/twitter/callback",
-  passport.authenticate("twitter", { failureRedirect: "/login" }),
-  (req, res) => {
+  router.get('/login',
+    function(req, res){
+      res.render('login');
+    });
+    
+  router.post('/login', 
+    passport.authenticate('local', { failureRedirect: '/login' }),
+    function(req, res) {
+      console.log('AUtHENTICATED!!!!!')
+      res.render('login-success');
+  });
+  
+  router.get('/register',
+    function(req, res){
+      res.render('register');
+    });
+    
+  router.post('/register', 
+    function(req, res, done) {
+  
+      try {
+        console.log('Body ->', req.body)
+        const { username, email, password } = req.body;
+  
+        users.insert({ username, email, password })
+          .then(user => {
+            console.log('Registered', user)
+            res.redirect('/');
+          })
+          .catch(error => {
+            console.log('Failed to register', user)
+            done(error)
+          })
+        return ;
+      } catch (error) {
+        done(error);
+        res.redirect('/');
+      }
+  });
+  
+  
+  router.get("/signout", (req, res) => {
+    req.logout();
     res.redirect("/");
-  }
-);
-
-router.get(
-  "/google",
-  passport.authenticate("google", {
-    scope: ["profile"]
-  })
-);
-router.get("/google/callback", passport.authenticate("google"), (req, res) => {
-  res.redirect("/");
-});
-
-router.get("/signout", (req, res) => {
-  req.logout();
-  res.redirect("/");
-});
-
-export default router;
+  });
+  
+  return router;
+}
