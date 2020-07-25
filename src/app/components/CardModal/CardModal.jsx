@@ -166,7 +166,7 @@ class CardModal extends Component {
             onFocus={() => this.setState({ isTextareaFocused: true })}
             onBlur={() => this.setState({ isTextareaFocused: false })}
           />
-          {(card.date || checkboxes.total > 0) && (
+          {(card.date || checkboxes.total > 0 || card.assignee) && (
             <CardBadges date={card.date} checkboxes={checkboxes} />
           )}
         </div>

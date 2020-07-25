@@ -63,6 +63,16 @@ class CardOptions extends Component {
     this.setState({ isCalendarOpen: !this.state.isCalendarOpen });
   };
 
+  onAssigneeChange = (e) => {
+    const userId = e.target.value
+    const { card, dispatch } = this.props;
+    debugger
+    dispatch({
+      type: "CHANGE_ASSIGNEE",
+      payload: { cardId: card._id, userId: userId }
+    });
+  }
+
   render() {
     const {
       isCardNearRightBorder,
@@ -148,6 +158,16 @@ class CardOptions extends Component {
             </div>&nbsp;Due date
           </button>
         </div>
+        <div className="options-list-button">
+          Assigned to <select onChange={this.onAssigneeChange}>
+            <option>none</option>
+            {this.props.users.map((user) => {
+              return <option value={user._id} selected={card.assignee === user._id}>
+                {user.username}
+              </option>
+            })}
+          </select>
+        </div>
         <Modal
           isOpen={isCalendarOpen}
           onRequestClose={this.toggleCalendar}
@@ -166,4 +186,8 @@ class CardOptions extends Component {
   }
 }
 
-export default connect()(CardOptions);
+export default connect((state) => {
+  return {
+    users: state.users
+  }
+})(CardOptions);

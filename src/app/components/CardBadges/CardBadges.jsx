@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import format from "date-fns/format";
 import differenceInCalendarDays from "date-fns/difference_in_calendar_days";
 import MdAlarm from "react-icons/lib/md/access-alarm";
@@ -71,17 +72,18 @@ class CardBadges extends Component {
 
   // Render badge showing amoung of checkboxes that are checked
   renderAssignee = () => {
-    const { total, checked } = this.props.checkboxes;
-    if (total === 0) {
+    const { assignee, users } = this.props;
+    if (!assignee) {
       return null;
     }
+    debugger;
+    const { username } = users.find(user => user._id.toString() === assignee)
     return (
       <div
         className="badge"
-        style={{ background: checked === total ? "green" : "#444" }}
+        style={{ background: "lightgrey" }}
       >
-        <MdDoneAll className="badge-icon" />&nbsp;
-        {checked}/{total}
+        {username}
       </div>
     );
   };
@@ -91,9 +93,14 @@ class CardBadges extends Component {
       <div className="card-badges">
         {this.renderDueDate()}
         {this.renderTaskProgress()}
+        {this.renderAssignee()}
       </div>
     );
   }
 }
 
-export default CardBadges;
+const mapStateToProps = (state, ownProps) => ({
+  users: state.users
+});
+
+export default connect(mapStateToProps)(CardBadges);

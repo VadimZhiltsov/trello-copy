@@ -16,7 +16,7 @@ class Header extends Component {
       <header>
         <Link to="/" className="header-title">
           <img src={kanbanLogo} alt="React Kanban logo" />
-          &nbsp;React Kanban
+          &nbsp;Trello
         </Link>
         <div className="header-right-side">
           {user ? (
